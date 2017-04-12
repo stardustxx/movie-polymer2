@@ -1,0 +1,38 @@
+<script>
+  class Constants extends Polymer.Element {
+    static get is() {
+      return 'ph-constants';
+    }
+
+    static get movieDbApiUrl() {
+      return "https://api.themoviedb.org/3";
+    }
+
+    static get movieApiKey() {
+      return "4d635c392f8ea506161393a2a62c4d56";
+    }
+
+    static get movieApiKeyParam() {
+      return `api_key=${this.movieApiKey}`;
+    }
+
+    static get movieDiscover() {
+      return `${this.movieDbApiUrl}/discover/movie?${this.movieApiKeyParam}`;
+    }
+
+    static get moviePopular() {
+      return `${this.movieDbApiUrl}/movie/popular?${this.movieApiKeyParam}`;
+    }
+
+    static get moviePosterBaseUrl() {
+      return 'https://image.tmdb.org/t/p';
+    }
+
+    static get tvDiscover() {
+      return `${this.movieDbApiUrl}/discover/tv?${this.movieApiKeyParam}`;
+    }
+
+  }
+
+  window.customElements.define(Constants.is, Constants);
+</script>

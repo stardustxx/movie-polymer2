@@ -1,0 +1,104 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="./service/movie-service.html">
+<link rel="import" href="./movie-constants.html">
+
+<dom-module id="my-view2">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      #list {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      #list .card {
+        flex: 200px;
+      }
+
+      #list .card img {
+        width: 100%;
+      }
+
+      #button-container {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+      }
+
+    </style>
+    
+    <div id="list">
+      <template is="dom-repeat" items="[[tvShows]]">
+        <div class="card">
+          <img src="{{item.poster}}" alt="">
+          <h1>{{item.name}}</h1>
+          <h3>Rating: {{item.rating}}</h3>
+          <p>{{item.overview}}</p>
+        </div>
+      </template>
+    </div>
+
+    <div id="button-container">
+      <paper-button raised id="btnLoadMore" class="indigo">Load More</paper-button>
+    </div>
+
+  </template>
+
+  <script>
+    class MyView2 extends Polymer.Element {
+      static get is() { return 'my-view2'; }
+
+      connectedCallback() {
+        super.connectedCallback();
+        let page = 1;
+        
+        this.set("tvShows", []);
+        this.getTVDiscover(page++);
+
+        let btnLoadMore = this.shadowRoot.querySelector("#btnLoadMore");
+        btnLoadMore.addEventListener("click", (evt) => {
+          this.getTVDiscover(page++);
+        });
+      }
+
+      getTVDiscover(page) {
+        MovieService.getTVDiscover(page).then((response) => {
+          console.log(response.results);
+          
+          for(let result of response.results) {
+            let obj = {
+              "name": result.name,
+              "overview": result.overview,
+              "poster": this.getPosterImage(result.poster_path),
+              "rating": result.vote_average
+            };
+
+            this.push("tvShows", obj);
+          }
+        });
+      }
+
+      getPosterImage(posterPath) {
+        return `${Constants.moviePosterBaseUrl}/w300${posterPath}`;
+      }
+    }
+
+    window.customElements.define(MyView2.is, MyView2);
+  </script>
+</dom-module>

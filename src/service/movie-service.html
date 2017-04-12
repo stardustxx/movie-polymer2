@@ -1,0 +1,36 @@
+<link rel="import" type="" href="../movie-constants.html">
+
+<script>
+  class MovieService extends Polymer.Element {
+
+    static get is() {
+      return 'movie-service';
+    }
+
+    static get movieDiscover() {
+      let request = new Request(Constants.movieDiscover);
+
+      return fetch(request).then((response) => {
+        return response.json();
+      });
+    }
+
+    static getMoviePopular(page) {
+      let request = new Request(`${Constants.moviePopular}&page=${page}`);
+
+      return fetch(request).then((response) => {
+        return response.json();
+      });
+    }
+
+    static getTVDiscover(page) {
+      let request = new Request(`${Constants.tvDiscover}&page=${page}`);
+
+      return fetch(request).then((response) => {
+        return response.json();
+      });
+    }
+  }
+
+  window.customElements.define(MovieService.is, MovieService);
+</script>
